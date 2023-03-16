@@ -12,9 +12,15 @@
     "postuninstall": "electron-builder install-app-deps",
     "build:win": "vue-cli-service electron:build --windows"
   },
+  "repository":"https://github.com/LuisVenegasd54/electron-build/tree/electron-update",
+  "publish":{
+    "provaider":"ghithub",
+    "releaseType":"release"
+  },
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.8.3",
+    "update-electron-app": "^2.0.1",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3"
