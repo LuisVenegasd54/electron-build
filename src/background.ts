@@ -1,9 +1,13 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow  } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const { autoUpdater } =  require("update-electron-app")
+let win:BrowserWindow
+
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -12,7 +16,7 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -25,6 +29,7 @@ async function createWindow() {
           .ELECTRON_NODE_INTEGRATION as unknown) as boolean
     }
   })
+
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -64,7 +69,23 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  createWindow();
+  if (!isDevelopment){
+    // const server = 'https://update.electronjs.org';
+    // const feed:Electron.FeedURLOptions = {url:`https://github.com/LuisVenegasd54/electron-build/tree/electron-update/${app.getVersion()}`};
+    // autoUpdater.setFeedURL(feed);
+    autoUpdater.checkForUpdates();
+    // console.log("version de la app :: ",app.getVersion())
+  }
+})
+
+autoUpdater.on("update-available", (info:any) => {
+  win.webContents.send("update available")
+  autoUpdater.downloaded();
+})
+
+autoUpdater.on("update-downloaded", (info:any) => {
+  win.webContents.send("update downloaded")
 })
 
 // Exit cleanly on request from parent process in development mode.
