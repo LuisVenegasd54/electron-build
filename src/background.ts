@@ -78,16 +78,6 @@ app.on('ready', async () => {
     // console.log("version de la app :: ",app.getVersion())
   }
 })
-
-autoUpdater.on("update-available", (info:any) => {
-  win.webContents.send("update available")
-  autoUpdater.downloaded();
-})
-
-autoUpdater.on("update-downloaded", (info:any) => {
-  win.webContents.send("update downloaded")
-})
-
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -102,3 +92,40 @@ if (isDevelopment) {
     })
   }
 }
+
+autoUpdater.on("update-downloaded", (info:any) => {
+  win.webContents.send("update downloaded")
+})
+
+/*checking for updates*/
+autoUpdater.on("checking-for-update", () => {
+  //your code
+});
+
+/*No updates available*/
+autoUpdater.on("update-not-available", (info:any) => {
+  win.webContents.send("update-not-available")
+  //your code
+});
+
+/*New Update Available*/
+autoUpdater.on("update-available", (info:any) => {
+  //your code
+  win.webContents.send("update available")
+  autoUpdater.downloaded();
+});
+
+/*Download Status Report*/
+autoUpdater.on("download-progress", (progressObj:any) => {
+ //your code
+ win.webContents.send("download-progress")
+
+});
+
+/*Download Completion Message*/
+autoUpdater.on("update-downloaded", (info:any) => {
+ //your code
+
+ win.webContents.send("update-download")
+
+});
