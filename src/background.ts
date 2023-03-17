@@ -4,7 +4,10 @@ import { app, protocol, BrowserWindow  } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-const { autoUpdater } =  require("update-electron-app")
+// const { autoUpdater } =  require("update-electron-app")
+import { autoUpdater } from "electron-updater";
+
+
 let win:BrowserWindow
 
 
@@ -93,39 +96,88 @@ if (isDevelopment) {
   }
 }
 
-autoUpdater.on("update-downloaded", (info:any) => {
-  win.webContents.send("update downloaded")
-})
+// autoUpdater.on("update-downloaded", (info:any) => {
+//   win.webContents.send("update downloaded")
+// })
+
+// /*checking for updates*/
+// autoUpdater.on("checking-for-update", () => {
+//   //your code
+//  console.log("hay actualizaciones")
+// });
+
+// /*No updates available*/
+// autoUpdater.on("update-not-available", (info:any) => {
+//   win.webContents.send("update-not-available")
+//   //your code
+// });
+
+// /*New Update Available*/
+// autoUpdater.on("update-available", (info:any) => {
+//   //your code
+//   win.webContents.send("update available")
+//   autoUpdater.downloaded();
+// });
+
+// /*Download Status Report*/
+// autoUpdater.on("download-progress", (progressObj:any) => {
+//  //your code
+//  win.webContents.send("download-progress")
+
+// });
+
+// /*Download Completion Message*/
+// autoUpdater.on("update-downloaded", (info:any) => {
+//  //your code
+
+//  win.webContents.send("update-download")
+
+// });
+
+const server = 'https://github.com/LuisVenegasd54/electron-build/releases/tag'
+const feed = `${server}/${app.getVersion()}`
+
+console.log("Proceso ::",feed)
+
+autoUpdater.setFeedURL(feed);
 
 /*checking for updates*/
 autoUpdater.on("checking-for-update", () => {
   //your code
+  console.log("Holaaa")
 });
 
 /*No updates available*/
-autoUpdater.on("update-not-available", (info:any) => {
-  win.webContents.send("update-not-available")
+autoUpdater.on("update-not-available", info => {
   //your code
+  console.log("Holaaa")
+
 });
 
 /*New Update Available*/
-autoUpdater.on("update-available", (info:any) => {
+autoUpdater.on("update-available", info => {
   //your code
-  win.webContents.send("update available")
-  autoUpdater.downloaded();
+  console.log("Holaaa")
+
 });
 
 /*Download Status Report*/
-autoUpdater.on("download-progress", (progressObj:any) => {
+autoUpdater.on("download-progress", progressObj => {
  //your code
- win.webContents.send("download-progress")
+ console.log("Holaaa")
 
 });
 
 /*Download Completion Message*/
-autoUpdater.on("update-downloaded", (info:any) => {
+autoUpdater.on("update-downloaded", info => {
  //your code
-
- win.webContents.send("update-download")
-
 });
+
+/*Checking updates just after app launch and also notify for the same*/
+app.on("ready", function() {
+ autoUpdater.checkForUpdatesAndNotify();
+});
+
+setInterval(() => {
+  autoUpdater.checkForUpdates()
+}, 1000)
