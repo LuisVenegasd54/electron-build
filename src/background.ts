@@ -171,6 +171,7 @@ autoUpdater.on("download-progress", progressObj => {
 /*Download Completion Message*/
 autoUpdater.on("update-downloaded", info => {
  //your code
+ autoUpdater.quitAndInstall()
 });
 
 /*Checking updates just after app launch and also notify for the same*/
@@ -180,4 +181,4 @@ app.on("ready", function() {
 
 setInterval(() => {
   autoUpdater.checkForUpdates()
-}, 1000)
+}, 30000)
